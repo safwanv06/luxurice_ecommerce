@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:globsoft_ecommerce_application/utils/no_data_page/no_data_page.dart';
 import 'package:globsoft_ecommerce_application/view/home/service/model/model.dart';
+import 'package:globsoft_ecommerce_application/view/home/view/widgets/corousal_slider.dart';
 import 'package:globsoft_ecommerce_application/view/home/view/widgets/drawer.dart';
 import 'package:globsoft_ecommerce_application/view/home/view/widgets/home_screen_component.dart';
 import 'package:globsoft_ecommerce_application/view/home/view/widgets/loading_screen.dart';
@@ -32,16 +33,31 @@ class HomeView extends StatelessWidget {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const LoadingScreen();
               } else if (snapshot.hasData) {
-                return GridView.builder(
-                  itemCount: snapshot.data?.length,
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2),
-                  itemBuilder: (context, index) {
-                    ProductData product = snapshot.data![index];
-                    return HomeScreenComponent(
-                      product: product,
-                    );
-                  },
+                return Padding(
+                  padding:  EdgeInsets.all(sizeChart.padding_12),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      CorousalSlider(products: snapshot.data!,),
+                      SizedBox(height: sizeChart.padding_12.h,),
+                      Text("Products",style: textStyles.font32Black,),
+                      SizedBox(height: sizeChart.padding_8.h,),
+                      Expanded(
+                        child: GridView.builder(
+                          shrinkWrap: true,
+                          itemCount: snapshot.data?.length,
+                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2),
+                          itemBuilder: (context, index) {
+                            ProductData product = snapshot.data![index];
+                            return HomeScreenComponent(
+                              product: product,
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
                 );
               } else {
                 return const NoDataPage();
